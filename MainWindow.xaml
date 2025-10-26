@@ -1,0 +1,229 @@
+<Window x:Class="EpicFlowchartBuilder.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:EpicFlowchartBuilder.Views"
+        mc:Ignorable="d"
+        Title="Epic Flowchart Builder" Height="800" Width="1400"
+        WindowState="Maximized">
+    
+    <Window.Resources>
+        <!-- Node Type to Color Converter -->
+        <local:NodeTypeToColorConverter x:Key="NodeColorConverter"/>
+    </Window.Resources>
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+        <!-- Menu Bar -->
+        <Menu Grid.Row="0">
+            <MenuItem Header="_File">
+                <MenuItem Header="_New" Command="{Binding NewFlowchartCommand}"/>
+                <MenuItem Header="_Open..." Command="{Binding LoadFlowchartCommand}"/>
+                <MenuItem Header="_Save..." Command="{Binding SaveFlowchartCommand}"/>
+                <Separator/>
+                <MenuItem Header="_Export to Draw.io..." Command="{Binding ExportToDrawioCommand}"/>
+                <Separator/>
+                <MenuItem Header="E_xit" Click="Exit_Click"/>
+            </MenuItem>
+            <MenuItem Header="_Edit">
+                <MenuItem Header="_Delete Node" Command="{Binding DeleteNodeCommand}"/>
+                <MenuItem Header="_Auto Arrange" Command="{Binding AutoArrangeCommand}"/>
+            </MenuItem>
+            <MenuItem Header="_Validate">
+                <MenuItem Header="_Validate Flowchart" Command="{Binding ValidateFlowchartCommand}"/>
+                <MenuItem Header="_AI Validation" Command="{Binding AiValidateCommand}"/>
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Header="_About" Click="About_Click"/>
+            </MenuItem>
+        </Menu>
+        
+        <!-- Toolbar -->
+        <ToolBar Grid.Row="1" Height="50">
+            <Button Command="{Binding NewFlowchartCommand}" ToolTip="New Flowchart" Padding="10,5">
+                <StackPanel>
+                    <TextBlock Text="📄" FontSize="16"/>
+                    <TextBlock Text="New" FontSize="9"/>
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding SaveFlowchartCommand}" ToolTip="Save" Padding="10,5">
+                <StackPanel>
+                    <TextBlock Text="💾" FontSize="16"/>
+                    <TextBlock Text="Save" FontSize="9"/>
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding ExportToDrawioCommand}" ToolTip="Export to Draw.io" Padding="10,5">
+                <StackPanel>
+                    <TextBlock Text="📤" FontSize="16"/>
+                    <TextBlock Text="Export" FontSize="9"/>
+                </StackPanel>
+            </Button>
+            <Separator/>
+            
+            <!-- Add Node Buttons -->
+            <Label Content="Add Node:" VerticalAlignment="Center"/>
+            <Button Command="{Binding AddNodeCommand}" CommandParameter="Start" 
+                    ToolTip="Add Start Node" Padding="8,5" Margin="2">
+                <TextBlock Text="⭕ Start" Background="#d5e8d4" Padding="5,2" FontSize="11"/>
+            </Button>
+            <Button Command="{Binding AddNodeCommand}" CommandParameter="Decision" 
+                    ToolTip="Add Decision Node" Padding="8,5" Margin="2">
+                <TextBlock Text="◇ Decision" Background="#fff2cc" Padding="5,2" FontSize="11"/>
+            </Button>
+            <Button Command="{Binding AddNodeCommand}" CommandParameter="Question" 
+                    ToolTip="Add Question Node" Padding="8,5" Margin="2">
+                <TextBlock Text="▭ Question" Background="#dae8fc" Padding="5,2" FontSize="11"/>
+            </Button>
+            <Button Command="{Binding AddNodeCommand}" CommandParameter="Action" 
+                    ToolTip="Add Action Node" Padding="8,5" Margin="2">
+                <TextBlock Text="▭ Action" Background="#e1d5e7" Padding="5,2" FontSize="11"/>
+            </Button>
+            <Button Command="{Binding AddNodeCommand}" CommandParameter="End" 
+                    ToolTip="Add End Node" Padding="8,5" Margin="2">
+                <TextBlock Text="⭕ End" Background="#f8cecc" Padding="5,2" FontSize="11"/>
+            </Button>
+            
+            <Separator/>
+            <Button Command="{Binding ValidateFlowchartCommand}" ToolTip="Validate" Padding="10,5">
+                <StackPanel>
+                    <TextBlock Text="✓" FontSize="16" FontWeight="Bold"/>
+                    <TextBlock Text="Validate" FontSize="9"/>
+                </StackPanel>
+            </Button>
+            <Button Command="{Binding AutoArrangeCommand}" ToolTip="Auto Arrange Nodes" Padding="10,5">
+                <StackPanel>
+                    <TextBlock Text="🔧" FontSize="16"/>
+                    <TextBlock Text="Arrange" FontSize="9"/>
+                </StackPanel>
+            </Button>
+        </ToolBar>
+        
+        <!-- Main Content -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="300"/>
+            </Grid.ColumnDefinitions>
+            
+            <!-- Left Panel - AI Assistant -->
+            <Border Grid.Column="0" BorderBrush="#ddd" BorderThickness="0,0,1,0" Padding="10">
+                <StackPanel>
+                    <TextBlock Text="AI Assistant" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+                    
+                    <TextBlock Text="OpenAI API Key:" Margin="0,0,0,5"/>
+                    <PasswordBox Name="ApiKeyBox" PasswordChar="*" Margin="0,0,0,10" 
+                                 PasswordChanged="ApiKeyBox_PasswordChanged"/>
+                    
+                    <Button Content="🤖 Generate from Description" 
+                            Command="{Binding AiGenerateCommand}"
+                            Padding="10" Margin="0,0,0,5" Background="#4CAF50" Foreground="White"/>
+                    
+                    <Button Content="🔍 AI Validate Flowchart" 
+                            Command="{Binding AiValidateCommand}"
+                            Padding="10" Margin="0,0,0,15" Background="#2196F3" Foreground="White"/>
+                    
+                    <TextBlock Text="Flowchart Info:" FontWeight="Bold" Margin="0,10,0,5"/>
+                    <TextBlock Text="{Binding CurrentFlowchart.Name, StringFormat='Name: {0}'}" Margin="0,2"/>
+                    <TextBlock Margin="0,2">
+                        <Run Text="Nodes: "/>
+                        <Run Text="{Binding Nodes.Count, Mode=OneWay}"/>
+                    </TextBlock>
+                    <TextBlock Margin="0,2">
+                        <Run Text="Connections: "/>
+                        <Run Text="{Binding Connections.Count, Mode=OneWay}"/>
+                    </TextBlock>
+                    
+                    <TextBlock Text="Instructions:" FontWeight="Bold" Margin="0,20,0,5"/>
+                    <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="#666" Margin="0,0,0,5">
+                        1. Add nodes using toolbar buttons<LineBreak/>
+                        2. Click nodes to edit properties<LineBreak/>
+                        3. Use AI to generate or validate<LineBreak/>
+                        4. Export to Draw.io for editing<LineBreak/>
+                        5. Save/Load as JSON files
+                    </TextBlock>
+                </StackPanel>
+            </Border>
+            
+            <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="#ddd"/>
+            
+            <!-- Center Panel - Canvas -->
+            <Border Grid.Column="2" BorderBrush="#ddd" BorderThickness="1" Background="#f5f5f5">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                    <Canvas Name="FlowchartCanvas" Width="1200" Height="1000" Background="White">
+                        <!-- Nodes will be rendered here -->
+                        <ItemsControl ItemsSource="{Binding Nodes}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <Canvas/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemContainerStyle>
+                                <Style TargetType="ContentPresenter">
+                                    <Setter Property="Canvas.Left" Value="{Binding Position.X}"/>
+                                    <Setter Property="Canvas.Top" Value="{Binding Position.Y}"/>
+                                </Style>
+                            </ItemsControl.ItemContainerStyle>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="Black" BorderThickness="2" CornerRadius="5"
+                                            Background="{Binding Type, Converter={StaticResource NodeColorConverter}}"
+                                            Width="{Binding Size.Width}" Height="{Binding Size.Height}"
+                                            Padding="5" Cursor="Hand">
+                                        <Grid>
+                                            <TextBlock Text="{Binding QuestionText}" 
+                                                       TextWrapping="Wrap" 
+                                                       TextAlignment="Center" 
+                                                       VerticalAlignment="Center"
+                                                       FontSize="11"/>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Canvas>
+                </ScrollViewer>
+            </Border>
+            
+            <GridSplitter Grid.Column="3" HorizontalAlignment="Stretch" Background="#ddd"/>
+            
+            <!-- Right Panel - Properties -->
+            <Border Grid.Column="4" BorderBrush="#ddd" BorderThickness="1,0,0,0" Padding="10">
+                <StackPanel>
+                    <TextBlock Text="Node Properties" FontSize="16" FontWeight="Bold" Margin="0,0,0,10"/>
+                    
+                    <TextBlock Text="Selected Node:" Margin="0,0,0,5"/>
+                    <TextBlock Text="{Binding SelectedNode.QuestionText, FallbackValue='No node selected'}" 
+                               FontStyle="Italic" Margin="0,0,0,10"/>
+                    
+                    <TextBlock Text="Node Type:" Margin="0,10,0,5"/>
+                    <TextBlock Text="{Binding SelectedNode.Type, FallbackValue='-'}" Margin="0,0,0,10"/>
+                    
+                    <TextBlock Text="Input Type:" Margin="0,10,0,5"/>
+                    <TextBlock Text="{Binding SelectedNode.InputType, FallbackValue='-'}" Margin="0,0,0,10"/>
+                    
+                    <Button Content="Delete Selected Node" 
+                            Command="{Binding DeleteNodeCommand}"
+                            IsEnabled="{Binding SelectedNode, Converter={x:Static local:NullToBooleanConverter.Instance}}"
+                            Padding="10" Margin="0,20,0,0" Background="#f44336" Foreground="White"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+        
+        <!-- Status Bar -->
+        <StatusBar Grid.Row="3" Height="25">
+            <StatusBarItem>
+                <TextBlock Text="{Binding StatusMessage, FallbackValue='Ready'}" />
+            </StatusBarItem>
+        </StatusBar>
+    </Grid>
+</Window>

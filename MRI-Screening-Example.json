@@ -1,0 +1,269 @@
+{
+  "Id": "12345678-1234-1234-1234-123456789012",
+  "Name": "MRI Safety Screening Questionnaire",
+  "Description": "Example MRI screening with device and metal checks",
+  "CreatedDate": "2025-10-25T00:00:00",
+  "LastModifiedDate": "2025-10-25T00:00:00",
+  "Author": "Epic Flowchart Builder",
+  "Version": 1,
+  "Nodes": [
+    {
+      "Id": "a1111111-1111-1111-1111-111111111111",
+      "Type": "Start",
+      "QuestionText": "MRI Safety Screening",
+      "InputType": "None",
+      "ChoiceOptions": [],
+      "Position": {
+        "X": 350,
+        "Y": 50
+      },
+      "Size": {
+        "Width": 120,
+        "Height": 60
+      },
+      "Notes": "Entry point for MRI screening"
+    },
+    {
+      "Id": "b2222222-2222-2222-2222-222222222222",
+      "Type": "Decision",
+      "QuestionText": "Do you have any implanted medical devices?",
+      "InputType": "YesNo",
+      "ChoiceOptions": [],
+      "Position": {
+        "X": 320,
+        "Y": 150
+      },
+      "Size": {
+        "Width": 180,
+        "Height": 100
+      },
+      "Notes": "Critical safety question - must not be skipped"
+    },
+    {
+      "Id": "c3333333-3333-3333-3333-333333333333",
+      "Type": "Question",
+      "QuestionText": "What type of device?",
+      "InputType": "MultipleChoice",
+      "ChoiceOptions": [
+        "Pacemaker",
+        "ICD (Defibrillator)",
+        "Neurostimulator",
+        "Cochlear Implant",
+        "Other"
+      ],
+      "Position": {
+        "X": 150,
+        "Y": 300
+      },
+      "Size": {
+        "Width": 160,
+        "Height": 80
+      },
+      "Notes": "Collect device type for safety assessment"
+    },
+    {
+      "Id": "d4444444-4444-4444-4444-444444444444",
+      "Type": "Question",
+      "QuestionText": "When was the device implanted?",
+      "InputType": "Date",
+      "ChoiceOptions": [],
+      "Position": {
+        "X": 150,
+        "Y": 420
+      },
+      "Size": {
+        "Width": 160,
+        "Height": 80
+      },
+      "Notes": "Date helps determine MRI compatibility"
+    },
+    {
+      "Id": "e5555555-5555-5555-5555-555555555555",
+      "Type": "Action",
+      "QuestionText": "STOP - Requires radiologist approval before MRI",
+      "InputType": "None",
+      "ChoiceOptions": [],
+      "Position": {
+        "X": 100,
+        "Y": 540
+      },
+      "Size": {
+        "Width": 140,
+        "Height": 70
+      },
+      "Notes": "Safety stop for patients with devices"
+    },
+    {
+      "Id": "f6666666-6666-6666-6666-666666666666",
+      "Type": "Decision",
+      "QuestionText": "Do you have any metal fragments, tattoos, or body piercings?",
+      "InputType": "YesNo",
+      "ChoiceOptions": [],
+      "Position": {
+        "X": 470,
+        "Y": 300
+      },
+      "Size": {
+        "Width": 180,
+        "Height": 100
+      },
+      "Notes": "Secondary safety check for metal objects"
+    },
+    {
+      "Id": "g7777777-7777-7777-7777-777777777777",
+      "Type": "Action",
+      "QuestionText": "Review required - Consult with radiologist",
+      "InputType": "None",
+      "ChoiceOptions": [],
+      "Position": {
+        "X": 420,
+        "Y": 440
+      },
+      "Size": {
+        "Width": 140,
+        "Height": 70
+      },
+      "Notes": "Manual review path"
+    },
+    {
+      "Id": "h8888888-8888-8888-8888-888888888888",
+      "Type": "Action",
+      "QuestionText": "Patient cleared for MRI - Proceed with scheduling",
+      "InputType": "None",
+      "ChoiceOptions": [],
+      "Position": {
+        "X": 620,
+        "Y": 440
+      },
+      "Size": {
+        "Width": 140,
+        "Height": 70
+      },
+      "Notes": "Approval to proceed"
+    },
+    {
+      "Id": "i9999999-9999-9999-9999-999999999999",
+      "Type": "End",
+      "QuestionText": "Screening Complete",
+      "InputType": "None",
+      "ChoiceOptions": [],
+      "Position": {
+        "X": 350,
+        "Y": 650
+      },
+      "Size": {
+        "Width": 120,
+        "Height": 60
+      },
+      "Notes": "Terminal node"
+    }
+  ],
+  "Connections": [
+    {
+      "Id": "conn-1",
+      "SourceNodeId": "a1111111-1111-1111-1111-111111111111",
+      "TargetNodeId": "b2222222-2222-2222-2222-222222222222",
+      "ConditionLabel": "",
+      "Logic": {
+        "Condition": "",
+        "SkippedNodeIds": []
+      }
+    },
+    {
+      "Id": "conn-2",
+      "SourceNodeId": "b2222222-2222-2222-2222-222222222222",
+      "TargetNodeId": "c3333333-3333-3333-3333-333333333333",
+      "ConditionLabel": "Yes",
+      "Logic": {
+        "Condition": "answer == 'Yes'",
+        "SkippedNodeIds": []
+      }
+    },
+    {
+      "Id": "conn-3",
+      "SourceNodeId": "b2222222-2222-2222-2222-222222222222",
+      "TargetNodeId": "f6666666-6666-6666-6666-666666666666",
+      "ConditionLabel": "No",
+      "Logic": {
+        "Condition": "answer == 'No'",
+        "SkippedNodeIds": [
+          "c3333333-3333-3333-3333-333333333333",
+          "d4444444-4444-4444-4444-444444444444",
+          "e5555555-5555-5555-5555-555555555555"
+        ]
+      }
+    },
+    {
+      "Id": "conn-4",
+      "SourceNodeId": "c3333333-3333-3333-3333-333333333333",
+      "TargetNodeId": "d4444444-4444-4444-4444-444444444444",
+      "ConditionLabel": "",
+      "Logic": {
+        "Condition": "",
+        "SkippedNodeIds": []
+      }
+    },
+    {
+      "Id": "conn-5",
+      "SourceNodeId": "d4444444-4444-4444-4444-444444444444",
+      "TargetNodeId": "e5555555-5555-5555-5555-555555555555",
+      "ConditionLabel": "",
+      "Logic": {
+        "Condition": "",
+        "SkippedNodeIds": []
+      }
+    },
+    {
+      "Id": "conn-6",
+      "SourceNodeId": "e5555555-5555-5555-5555-555555555555",
+      "TargetNodeId": "i9999999-9999-9999-9999-999999999999",
+      "ConditionLabel": "",
+      "Logic": {
+        "Condition": "",
+        "SkippedNodeIds": []
+      }
+    },
+    {
+      "Id": "conn-7",
+      "SourceNodeId": "f6666666-6666-6666-6666-666666666666",
+      "TargetNodeId": "g7777777-7777-7777-7777-777777777777",
+      "ConditionLabel": "Yes",
+      "Logic": {
+        "Condition": "answer == 'Yes'",
+        "SkippedNodeIds": []
+      }
+    },
+    {
+      "Id": "conn-8",
+      "SourceNodeId": "f6666666-6666-6666-6666-666666666666",
+      "TargetNodeId": "h8888888-8888-8888-8888-888888888888",
+      "ConditionLabel": "No",
+      "Logic": {
+        "Condition": "answer == 'No'",
+        "SkippedNodeIds": [
+          "g7777777-7777-7777-7777-777777777777"
+        ]
+      }
+    },
+    {
+      "Id": "conn-9",
+      "SourceNodeId": "g7777777-7777-7777-7777-777777777777",
+      "TargetNodeId": "i9999999-9999-9999-9999-999999999999",
+      "ConditionLabel": "",
+      "Logic": {
+        "Condition": "",
+        "SkippedNodeIds": []
+      }
+    },
+    {
+      "Id": "conn-10",
+      "SourceNodeId": "h8888888-8888-8888-8888-888888888888",
+      "TargetNodeId": "i9999999-9999-9999-9999-999999999999",
+      "ConditionLabel": "",
+      "Logic": {
+        "Condition": "",
+        "SkippedNodeIds": []
+      }
+    }
+  ]
+}
